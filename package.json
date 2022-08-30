@@ -1,7 +1,7 @@
 {
   "name": "solid-use-lanyard",
-  "description": "SocketJS wrapper for the Lanyard API",
-  "version": "1.0.0",
+  "description": "SolidJS wrapper for the Lanyard API",
+  "version": "1.0.1",
   "packageManager": "yarn@3.2.3",
   "type": "module",
   "license": "MIT",
