@@ -1,0 +1,84 @@
+{
+  "name": "solid-use-lanyard",
+  "description": "SocketJS wrapper for the Lanyard API",
+  "version": "1.0.0",
+  "packageManager": "yarn@3.2.3",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wiisportsresort/solid-use-lanyard.git"
+  },
+  "keywords": [
+    "solid",
+    "solid-js",
+    "typescript",
+    "lanyard",
+    "websocket",
+    "discord"
+  ],
+  "author": {
+    "name": "wiisportsresort",
+    "email": "devdoge1@gmail.com",
+    "url": "https://github.com/wiisportsresort"
+  },
+  "scripts": {
+    "build": "yarn cjs & yarn esm &",
+    "cjs": "tsc --moduleResolution node --target es6 --declaration --sourceMap --outDir dist/cjs --module commonjs lanyard.ts",
+    "esm": "tsc --moduleResolution node --target es6 --declaration --sourceMap --outDir dist/esm --module esnext lanyard.ts",
+    "test": "jest"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/cjs/lanyard.js",
+  "types": "./dist/cjs/lanyard.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/lanyard.js",
+      "require": "./dist/cjs/lanyard.js"
+    },
+    "./types": {
+      "import": "./dist/esm/types.js",
+      "require": "./dist/cjs/types.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json",
+        "babelConfig": {
+          "presets": [
+            "babel-preset-solid",
+            "@babel/preset-env"
+          ]
+        }
+      }
+    },
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "solid-js/web": "<rootDir>/node_modules/solid-js/web/dist/web.cjs",
+      "solid-js": "<rootDir>/node_modules/solid-js/dist/solid.cjs"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
+    "@types/jest": "^28.1.8",
+    "axios": "^0.27.2",
+    "babel-preset-solid": "^1.5.1",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^29.0.1",
+    "solid-js": "^1.5.1",
+    "ts-jest": "^28.0.8",
+    "typescript": "^4.8.2"
+  },
+  "peerDependencies": {
+    "solid-js": "*"
+  }
+}
