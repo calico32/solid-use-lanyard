@@ -4836,9 +4836,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solid-lanyard@workspace:.":
+"solid-use-lanyard@workspace:.":
   version: 0.0.0-use.local
-  resolution: "solid-lanyard@workspace:."
+  resolution: "solid-use-lanyard@workspace:."
   dependencies:
     "@babel/core": ^7.18.13
     "@babel/preset-env": ^7.18.10
