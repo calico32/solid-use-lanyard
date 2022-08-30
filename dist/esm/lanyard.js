@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { batch, createEffect, createSignal, onCleanup } from 'solid-js';
 import { Opcode, } from './types';
 const REST_URL = 'https://api.lanyard.rest/v1/users';
 const SOCKET_URL = 'wss://api.lanyard.rest/socket';
@@ -20,10 +20,12 @@ const request = (url) => __awaiter(void 0, void 0, void 0, function* () {
     return res.data;
 });
 export const appAssetUrl = (applicationId, assetId, type = 'webp') => {
+    if (!applicationId || !assetId)
+        return;
     if (assetId.startsWith('mp:')) {
         return `https://media.discordapp.net/${assetId.slice(3)}`;
     }
-    return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.webp`;
+    return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.${type}`;
 };
 export const userAvatarUrl = (userId, type = 'webp') => {
     return `https://api.lanyard.rest/${userId}.${type}`;
@@ -74,6 +76,7 @@ function useLanyard(opts) {
     const [closed, setClosed] = createSignal(false);
     const [presence, setPresence] = createSignal({}, { equals: false });
     const [socket, setSocket] = createSignal(new WebSocket(SOCKET_URL));
+    const [latestUpdate, setLatestUpdate] = createSignal();
     const setEventListeners = (socket) => {
         socket.onopen = () => {
             const data = 'id' in opts
@@ -110,7 +113,13 @@ function useLanyard(opts) {
                         });
                     }
                     else {
-                        setPresence(data);
+                        batch(() => {
+                            setPresence((prev) => {
+                                return Object.assign(Object.assign({}, prev), data);
+                            });
+                            const [latestUpdateId, latestUpdate] = Object.entries(data)[0];
+                            setLatestUpdate(Object.assign(Object.assign({}, latestUpdate), { user_id: latestUpdateId }));
+                        });
                     }
                     break;
                 }
@@ -141,6 +150,9 @@ function useLanyard(opts) {
     };
     client.closed = closed;
     client.presence = client;
+    if ('ids' in opts || 'all' in opts) {
+        client.latestUpdate = latestUpdate;
+    }
     return client;
 }
 export default useLanyard;

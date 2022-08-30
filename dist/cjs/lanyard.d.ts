@@ -1,6 +1,6 @@
 import { Accessor } from 'solid-js';
-import { Presence, Snowflake } from './types';
-export declare const appAssetUrl: (applicationId: string, assetId: string, type?: string) => string;
+import { Presence, PresenceWithId, Snowflake } from './types';
+export declare const appAssetUrl: (applicationId?: string, assetId?: string, type?: string) => string | undefined;
 export declare const userAvatarUrl: (userId: string, type?: string) => string;
 interface RestOpts {
     type: 'rest';
@@ -36,11 +36,14 @@ interface SocketClient<T> {
     close: () => void;
     closed: () => boolean;
 }
+interface LatestUpdate {
+    latestUpdate: Accessor<PresenceWithId | undefined>;
+}
 declare type LanyardClient<T extends LanyardOpts> = T extends RestRefreshOpts ? RestRefreshClient<Presence | undefined> : T extends RestOpts ? Accessor<Presence | undefined> : T extends SocketOpts | string ? SocketClient<Presence | undefined> : T extends SocketMultiIdOpts<infer U> ? SocketClient<{
     [key in U[number]]: Presence;
-}> : T extends SocketAllOpts ? SocketClient<{
+}> & LatestUpdate : T extends SocketAllOpts ? SocketClient<{
     [key: Snowflake]: Presence;
-}> : never;
+}> & LatestUpdate : never;
 declare function useLanyard<T extends LanyardOpts>(opts: T): LanyardClient<T>;
 export default useLanyard;
 export * from './types';

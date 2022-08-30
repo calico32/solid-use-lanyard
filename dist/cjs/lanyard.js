@@ -37,10 +37,12 @@ const request = (url) => __awaiter(void 0, void 0, void 0, function* () {
     return res.data;
 });
 const appAssetUrl = (applicationId, assetId, type = 'webp') => {
+    if (!applicationId || !assetId)
+        return;
     if (assetId.startsWith('mp:')) {
         return `https://media.discordapp.net/${assetId.slice(3)}`;
     }
-    return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.webp`;
+    return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.${type}`;
 };
 exports.appAssetUrl = appAssetUrl;
 const userAvatarUrl = (userId, type = 'webp') => {
@@ -93,6 +95,7 @@ function useLanyard(opts) {
     const [closed, setClosed] = (0, solid_js_1.createSignal)(false);
     const [presence, setPresence] = (0, solid_js_1.createSignal)({}, { equals: false });
     const [socket, setSocket] = (0, solid_js_1.createSignal)(new WebSocket(SOCKET_URL));
+    const [latestUpdate, setLatestUpdate] = (0, solid_js_1.createSignal)();
     const setEventListeners = (socket) => {
         socket.onopen = () => {
             const data = 'id' in opts
@@ -129,7 +132,13 @@ function useLanyard(opts) {
                         });
                     }
                     else {
-                        setPresence(data);
+                        (0, solid_js_1.batch)(() => {
+                            setPresence((prev) => {
+                                return Object.assign(Object.assign({}, prev), data);
+                            });
+                            const [latestUpdateId, latestUpdate] = Object.entries(data)[0];
+                            setLatestUpdate(Object.assign(Object.assign({}, latestUpdate), { user_id: latestUpdateId }));
+                        });
                     }
                     break;
                 }
@@ -160,6 +169,9 @@ function useLanyard(opts) {
     };
     client.closed = closed;
     client.presence = client;
+    if ('ids' in opts || 'all' in opts) {
+        client.latestUpdate = latestUpdate;
+    }
     return client;
 }
 exports.default = useLanyard;
