@@ -185,34 +185,45 @@ function useLanyard<T extends LanyardOpts>(opts: T): LanyardClient<T> {
         case Opcode.Event: {
           const data = message.d
 
-          if ('activities' in data) {
-            if (!('id' in opts)) {
-              throw new Error(
-                'got single presence data object but we specified multiple ids or all'
-              )
-            }
-            setPresence((prev) => {
-              prev[(opts as any).id] = data as Presence
-              return prev
-            })
-          } else {
-            batch(() => {
+          batch(() => {
+            let latestUpdateId: Snowflake
+            let latestUpdate: Presence
+
+            if ('activities' in data) {
+              // single presence update
+              const id =
+                (data as PresenceWithId).user_id ??
+                (data as Presence).discord_user?.id ??
+                (opts as SocketOpts).id
+
+              if (!id) {
+                throw new Error('No user id found')
+              }
+
+              setPresence((prev) => {
+                prev[id] = data as Presence
+                return prev
+              })
+
+              latestUpdateId = id
+              latestUpdate = data as Presence
+            } else {
+              // id -> presence map
               setPresence((prev) => {
                 return {
                   ...prev,
                   ...data,
                 }
               })
-              const [latestUpdateId, latestUpdate] = Object.entries(data)[0] as [
-                Snowflake,
-                Presence
-              ]
-              setLatestUpdate({
-                ...latestUpdate,
-                user_id: latestUpdateId,
-              })
+              ;[latestUpdateId, latestUpdate] = Object.entries(data)[0] as [Snowflake, Presence]
+            }
+
+            setLatestUpdate({
+              ...latestUpdate,
+              user_id: latestUpdateId,
             })
-          }
+          })
+
           break
         }
       }

@@ -97,24 +97,32 @@ function useLanyard(opts) {
                 }
                 case Opcode.Event: {
                     const data = message.d;
-                    if ('activities' in data) {
-                        if (!('id' in opts)) {
-                            throw new Error('got single presence data object but we specified multiple ids or all');
+                    batch(() => {
+                        var _a, _b, _c;
+                        let latestUpdateId;
+                        let latestUpdate;
+                        if ('activities' in data) {
+                            // single presence update
+                            const id = (_c = (_a = data.user_id) !== null && _a !== void 0 ? _a : (_b = data.discord_user) === null || _b === void 0 ? void 0 : _b.id) !== null && _c !== void 0 ? _c : opts.id;
+                            if (!id) {
+                                throw new Error('No user id found');
+                            }
+                            setPresence((prev) => {
+                                prev[id] = data;
+                                return prev;
+                            });
+                            latestUpdateId = id;
+                            latestUpdate = data;
                         }
-                        setPresence((prev) => {
-                            prev[opts.id] = data;
-                            return prev;
-                        });
-                    }
-                    else {
-                        batch(() => {
+                        else {
+                            // id -> presence map
                             setPresence((prev) => {
                                 return Object.assign(Object.assign({}, prev), data);
                             });
-                            const [latestUpdateId, latestUpdate] = Object.entries(data)[0];
-                            setLatestUpdate(Object.assign(Object.assign({}, latestUpdate), { user_id: latestUpdateId }));
-                        });
-                    }
+                            [latestUpdateId, latestUpdate] = Object.entries(data)[0];
+                        }
+                        setLatestUpdate(Object.assign(Object.assign({}, latestUpdate), { user_id: latestUpdateId }));
+                    });
                     break;
                 }
             }
