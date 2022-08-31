@@ -2060,16 +2060,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.27.2":
-  version: 0.27.2
-  resolution: "axios@npm:0.27.2"
-  dependencies:
-    follow-redirects: ^1.14.9
-    form-data: ^4.0.0
-  checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
-  languageName: node
-  linkType: hard
-
 "babel-jest@npm:^28.1.3":
   version: 28.1.3
   resolution: "babel-jest@npm:28.1.3"
@@ -2871,16 +2861,6 @@ __metadata:
     locate-path: ^5.0.0
     path-exists: ^4.0.0
   checksum: 4c172680e8f8c1f78839486e14a43ef82e9decd0e74145f40707cc42e7420506d5ec92d9a11c22bd2c48fb0c384ea05dd30e10dd152fefeec6f2f75282a8b844
-  languageName: node
-  linkType: hard
-
-"follow-redirects@npm:^1.14.9":
-  version: 1.15.1
-  resolution: "follow-redirects@npm:1.15.1"
-  peerDependenciesMeta:
-    debug:
-      optional: true
-  checksum: 6aa4e3e3cdfa3b9314801a1cd192ba756a53479d9d8cca65bf4db3a3e8834e62139245cd2f9566147c8dfe2efff1700d3e6aefd103de4004a7b99985e71dd533
   languageName: node
   linkType: hard
 
@@ -4846,13 +4826,13 @@ __metadata:
     "@types/babel__core": ^7
     "@types/babel__preset-env": ^7
     "@types/jest": ^28.1.8
-    axios: ^0.27.2
     babel-preset-solid: ^1.5.1
     jest: ^28.1.3
     jest-environment-jsdom: ^29.0.1
     solid-js: ^1.5.1
     ts-jest: ^28.0.8
     typescript: ^4.8.2
+    whatwg-fetch: ^3.6.2
   peerDependencies:
     solid-js: "*"
   languageName: unknown
@@ -5304,6 +5284,13 @@ __metadata:
   dependencies:
     iconv-lite: 0.6.3
   checksum: 7087810c410aa9b689cbd6af8773341a53cdc1f3aae2a882c163bd5522ec8ca4cdfc269aef417a5792f411807d5d77d50df4c24e3abb00bb60192858a40cc675
+  languageName: node
+  linkType: hard
+
+"whatwg-fetch@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "whatwg-fetch@npm:3.6.2"
+  checksum: ee976b7249e7791edb0d0a62cd806b29006ad7ec3a3d89145921ad8c00a3a67e4be8f3fb3ec6bc7b58498724fd568d11aeeeea1f7827e7e1e5eae6c8a275afed
   languageName: node
   linkType: hard
 

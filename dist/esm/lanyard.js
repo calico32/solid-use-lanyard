@@ -12,12 +12,7 @@ import { Opcode, } from './types';
 const REST_URL = 'https://api.lanyard.rest/v1/users';
 const SOCKET_URL = 'wss://api.lanyard.rest/socket';
 const request = (url) => __awaiter(void 0, void 0, void 0, function* () {
-    if ('fetch' in globalThis) {
-        return globalThis.fetch(url).then((r) => r.json());
-    }
-    const { default: axios } = yield import('axios');
-    const res = yield axios.get(url);
-    return res.data;
+    return fetch(url).then((r) => r.json());
 });
 export const appAssetUrl = (applicationId, assetId, type = 'webp') => {
     if (!applicationId || !assetId)

@@ -15,6 +15,8 @@ describe('useLanyard', () => {
   const id = '94490510688792576'
   const ids = [id, '149491899240153088']
 
+  jest.requireActual('whatwg-fetch')
+
   describe('rest api', () => {
     it('should return an accessor', async () => {
       await solid((done) => {

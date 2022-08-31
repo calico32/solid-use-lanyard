@@ -12,16 +12,6 @@ import {
 const REST_URL = 'https://api.lanyard.rest/v1/users'
 const SOCKET_URL = 'wss://api.lanyard.rest/socket'
 
-const request = async (url: string) => {
-  if ('fetch' in globalThis) {
-    return globalThis.fetch(url).then((r) => r.json())
-  }
-
-  const { default: axios } = await import('axios')
-  const res = await axios.get(url)
-  return res.data
-}
-
 export const appAssetUrl = (
   applicationId?: string,
   assetId?: string,
@@ -116,12 +106,14 @@ function useLanyard<T extends LanyardOpts>(opts: T): LanyardClient<T> {
     let intervalId: number | undefined
 
     const getPresence = async () => {
-      request(`${REST_URL}/${id}`).then(({ data }: { data: Presence }) => {
-        setPresence({
-          ...data,
-          user_id: id,
+      fetch(`${REST_URL}/${id}`)
+        .then((r) => r.json())
+        .then(({ data }: { data: Presence }) => {
+          setPresence({
+            ...data,
+            user_id: id,
+          })
         })
-      })
     }
 
     getPresence()
