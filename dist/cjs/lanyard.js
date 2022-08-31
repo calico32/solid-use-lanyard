@@ -28,9 +28,6 @@ const solid_js_1 = require("solid-js");
 const types_1 = require("./types");
 const REST_URL = 'https://api.lanyard.rest/v1/users';
 const SOCKET_URL = 'wss://api.lanyard.rest/socket';
-const request = (url) => __awaiter(void 0, void 0, void 0, function* () {
-    return fetch(url).then((r) => r.json());
-});
 const appAssetUrl = (applicationId, assetId, type = 'webp') => {
     if (!applicationId || !assetId)
         return;
@@ -57,7 +54,9 @@ function useLanyard(opts) {
         const [presence, setPresence] = (0, solid_js_1.createSignal)();
         let intervalId;
         const getPresence = () => __awaiter(this, void 0, void 0, function* () {
-            request(`${REST_URL}/${id}`).then(({ data }) => {
+            fetch(`${REST_URL}/${id}`)
+                .then((r) => r.json())
+                .then(({ data }) => {
                 setPresence(Object.assign(Object.assign({}, data), { user_id: id }));
             });
         });
